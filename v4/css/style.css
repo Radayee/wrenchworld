@@ -152,7 +152,11 @@ h3{color:#f0c454}
 #tutBubble .av{position:absolute;left:10px;top:10px;width:46px;height:46px;border-radius:50%;background:#2F5D9E;display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid #6b5136}
 #tutBubble .qh{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#6b5136;font-weight:800;margin-bottom:3px}
 #tutBubble .btn{margin-top:6px}#tutBubble a{color:#8a5a10}
-#tutBubble.shake{animation:shk .35s}
-@keyframes shk{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
-.tut-hl{position:relative;z-index:55;outline:3px solid #E3B23C!important;outline-offset:3px;box-shadow:0 0 0 9999px rgba(0,0,0,.0),0 0 18px 6px rgba(227,178,60,.7)!important;animation:tutp 1.1s infinite}
-@keyframes tutp{50%{outline-color:#fff4c2;box-shadow:0 0 26px 10px rgba(227,178,60,.9)}}
+
+
+.tut-hl{outline:4px solid #ffca28!important;outline-offset:4px;box-shadow:0 0 0 7px rgba(255,193,7,.28),0 0 24px 10px rgba(255,193,7,.75);animation:tutp 1.3s ease-in-out infinite!important}
+@keyframes tutp{50%{outline-offset:7px;box-shadow:0 0 0 12px rgba(255,193,7,.18),0 0 36px 15px rgba(255,193,7,.9)}}
+
+#tutBubble{pointer-events:none;max-width:calc(100vw - 20px)}
+#tutBubble button,#tutBubble a{pointer-events:auto}
+@media(prefers-reduced-motion:reduce){.tut-hl{animation:none!important}}

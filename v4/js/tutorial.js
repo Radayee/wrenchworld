@@ -54,27 +54,17 @@
   T.on = () => WW.S && WW.S.tutor && WW.started;
   T.cur = () => T.on() ? T.steps[WW.S.tutor.i] : null;
   T.target = function (st) { if (!st || !st.el) return null; const e = typeof st.el === 'function' ? st.el() : q(st.el); return e || null; };
-  T.allowed = function (node) {
-    const st = T.cur(); if (!st) return true;
-    if (node.closest && node.closest('#tutBubble')) return true;
-    if (st.free && st.free()) return true;
-    if (MOD.open && node.closest && node.closest('#modalBox')) { const t0 = T.target(st); if (!t0 || !document.getElementById('modalBox').contains(t0)) return true; }
-    if (st.map && node.id === 'world') return true;
-    if (st.map && node.closest && node.closest('#buildBar')) return true;
-    const t = T.target(st); return !!(t && (t === node || t.contains(node)));
-  };
-  // блокировка всего лишнего
-  const block = e => { if (!T.on()) return; if (T.allowed(e.target)) return; e.preventDefault(); e.stopPropagation(); if (e.type === 'click' || e.type === 'mousedown') { const b = $('tutBubble'); if (b) { b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); } } };
-  for (const ev of ['click', 'mousedown', 'pointerdown', 'change', 'input', 'contextmenu', 'dblclick']) document.addEventListener(ev, block, true);
-  document.addEventListener('keydown', e => { if (!T.on() || e.key === '`' || e.key === 'ё' || e.key === 'Ё' || (MOD.key === 'dbg')) return; const st = T.cur(); if (st && st.free && st.free()) return; if (/INPUT|SELECT|TEXTAREA/.test(e.target.tagName) && T.allowed(e.target)) return; e.preventDefault(); e.stopPropagation(); }, true);
-  document.addEventListener('wheel', e => { if (T.on() && !(T.cur() || {}).map && e.target.id === 'world') { e.stopPropagation(); } }, true);
-  // подсказка Попса рядом с целью
+  // Guidance highlights the next action without intercepting normal input.
   T.tick = function () {
     let b = $('tutBubble');
     if (!T.on()) { if (b) b.remove(); document.querySelectorAll('.tut-hl').forEach(x => x.classList.remove('tut-hl')); return; }
     const S = WW.S, st = T.cur(); if (!st) return;
-    if (!S.tutor.prep) { S.tutor.prep = 1; S.tutor.at = performance.now(); if (st.prep) st.prep(); }
-    if (st.run) { if (UI.speed !== st.run && !MOD.open) UI.setSpeed(st.run); } else if (!st.el || !/tSpeed/.test(st.el)) { if (UI.speed && !(st.done && st.done.toString().includes('UI.speed'))) UI.setSpeed(0); }
+    if (!S.tutor.prep) {
+      S.tutor.prep = 1; S.tutor.at = performance.now(); if (st.prep) st.prep();
+      // Set the suggested pace once; respect subsequent player speed/pause changes.
+      if (st.run) { if (!MOD.open) UI.setSpeed(st.run); }
+      else if (!st.el || !/tSpeed/.test(st.el)) { if (UI.speed && !(st.done && st.done.toString().includes('UI.speed'))) UI.setSpeed(0); }
+    }
     const t = T.target(st);
     document.querySelectorAll('.tut-hl').forEach(x => { if (x !== t) x.classList.remove('tut-hl'); }); if (t) t.classList.add('tut-hl');
     if (!b) { b = document.createElement('div'); b.id = 'tutBubble'; document.body.appendChild(b); }
