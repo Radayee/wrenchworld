@@ -1,0 +1,76 @@
+/* Visible viewport, browser chrome and device safe areas. */
+html,body{width:100%;height:100%;min-width:0;overscroll-behavior:none}
+#app{width:100%;height:100vh;height:100dvh;height:var(--app-height,100dvh);min-height:0;overflow:hidden;padding-top:env(safe-area-inset-top,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+#stage,#nav,#top,.pb{min-width:0;min-height:0}
+#nav{flex-shrink:0;padding-bottom:calc(5px + env(safe-area-inset-bottom,0px));z-index:10}
+#nav button{flex-shrink:0;touch-action:manipulation}
+.pb{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#modal{padding:12px;max-height:var(--app-height,100dvh)}
+#modalBox,#modalBox.mwide{max-height:calc(var(--app-height,100dvh) - 24px);max-width:100%;overscroll-behavior:contain}
+#mobileMapTools,.mobile-rotate{display:none}
+#world,#cityCv{touch-action:none}
+.grid2>*,.grid3>*,.rgrid>*,.auc>*,.lst>*{min-width:0}
+
+@media(max-width:700px),(pointer:coarse) and (max-width:1100px){
+  #top{display:grid;grid-template-columns:minmax(0,1fr) minmax(64px,auto) 44px;gap:4px;height:auto;min-height:0;padding:4px 6px}
+  #top .logo{grid-column:1;grid-row:1;margin:0;font-size:14px;overflow:hidden}
+  #tMoney{grid-column:2;grid-row:1;min-width:0;font-size:13px;padding:4px}
+  #top>button[data-a="menu"]{grid-column:3;grid-row:1;min-height:36px}
+  #tDate{grid-column:1;grid-row:2;overflow:hidden;text-overflow:ellipsis}
+  #tClock{grid-column:2;grid-row:2;min-width:0}
+  #tWeather{grid-column:3;grid-row:2;overflow:hidden;text-overflow:clip}
+  #tSpeed{grid-column:1/3;grid-row:3;width:100%;min-width:0}
+  #tSpeed button{flex:1;min-width:0;min-height:40px;padding:6px 8px}
+  #bMute{grid-column:3;grid-row:3;min-height:40px}
+  #tStage,#tRep,#top>.sp{display:none}
+  #top .tb{font-size:11px;padding:3px 5px}
+  #radio{height:20px;font-size:11px}
+  #radio .rl{padding:0 6px}
+  #nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:5px 5px calc(5px + env(safe-area-inset-bottom,0px));max-height:35%;overflow:auto}
+  #nav button{min-width:0;min-height:40px;padding:5px 2px;font-size:11px;white-space:normal;overflow-wrap:anywhere}
+  #nav kbd{display:none}
+  #panel,#panel.wide{left:4px;right:4px;top:4px;bottom:4px;width:auto;max-width:none}
+  .ph{padding:5px 8px;flex-wrap:wrap}
+  .ph h2{font-size:14px;min-width:0}
+  .ph .x{min-width:40px;min-height:40px}
+  .pb{padding:8px}
+  #modalBox,#modalBox.mwide{width:100%;padding:12px}
+  .grid2,.grid3,.auc,.lst,.rgrid,.nodes,.rnodes{grid-template-columns:minmax(0,1fr)}
+  .cal{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .kan{grid-template-columns:repeat(7,160px);overflow-x:auto}
+  .nd{grid-template-columns:18px minmax(60px,1fr) 70px 42px auto;gap:4px}
+  .hyp{grid-template-columns:minmax(80px,1fr) minmax(60px,1fr) 36px}
+  .sk{grid-template-columns:108px minmax(40px,1fr) 22px}
+  .lst canvas,.auc canvas{width:100%;max-width:260px;height:auto}
+  .bp{max-width:100%;height:auto}
+  .btn,.ico,select,input[type="number"],input[type="text"]{min-height:40px}
+  input,select,textarea{font-size:16px!important;max-width:100%}
+  .menu .btn{min-height:44px}
+  #alerts{right:4px;top:4px;width:min(230px,65%);max-height:28%}
+  #toasts{right:4px;bottom:44px;width:min(300px,85%);max-height:40%;overflow:hidden}
+  #quest{left:4px;bottom:6px;width:min(250px,65%);max-height:32%;overflow:auto}
+  #pops{bottom:6px;width:calc(100% - 12px);max-height:65%;overflow:auto;padding:8px 10px 8px 48px;font-size:12px}
+  #pops .av{width:32px;height:32px;left:7px;top:8px;font-size:22px}
+  #pops button{min-height:40px}
+  #ovl{left:4px;right:auto;bottom:4px;max-width:calc(100% - 60px);flex-wrap:wrap}
+  #hint{display:none}
+  #buildBar{left:4px;right:4px;top:4px;transform:none;max-width:calc(100% - 8px);white-space:normal;flex-wrap:wrap;padding:5px;gap:5px}
+  #buildBar kbd{display:none}
+  .mobile-rotate{display:inline-block}
+  #mobileMapTools{position:absolute;right:6px;bottom:54px;display:flex;flex-direction:column;gap:5px;z-index:6}
+  #mobileMapTools button{width:40px;height:40px;border:1px solid var(--acc);border-radius:6px;background:rgba(26,28,32,.94);font-size:22px;touch-action:manipulation}
+  #tutBubble{font-size:12px;padding:8px 10px 8px 48px;max-height:calc(var(--app-height,100dvh) - 20px);overflow:auto;transition:none}
+  #tutBubble .av{width:30px;height:30px;left:8px;top:8px;font-size:21px}
+  #tutBubble button,#tutBubble a{min-height:40px;display:inline-flex;align-items:center}
+  #cityLot{width:60%!important;max-height:90%;overflow:auto}
+}
+/* Landscape keeps the map usable while the navigation can be swiped. */
+@media(max-height:500px) and (max-width:1100px){
+  #nav{display:flex;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;max-height:none;gap:4px}
+  #nav button{flex:0 0 auto;min-width:76px;min-height:36px;padding:4px 8px}
+  #radio{display:none}
+  #tDate,#tClock,#tWeather{display:none}
+  #tSpeed{grid-row:2;grid-column:1/3}
+  #bMute{grid-row:2}
+  #top .ico,#top>button[data-a="menu"],#bMute,#tSpeed button{min-height:32px}
+}
