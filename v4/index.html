@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WRENCHWORLD — v4</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <header id="top">
+    <div class="logo" data-a="menu" title="Меню (Esc)">WRENCH<b>WORLD</b></div>
+    <div class="tb" id="tDate"></div>
+    <div class="tb clock" id="tClock"></div>
+    <div class="tb" id="tWeather"></div>
+    <div class="tb stage" id="tStage" data-a="panel" data-p="goals"></div>
+    <div class="sp"></div>
+    <div class="tb rep" id="tRep" data-a="panel" data-p="log"></div>
+    <div class="tb money" id="tMoney" data-a="panel" data-p="fin"></div>
+    <div class="speed" id="tSpeed">
+      <button data-a="speed" data-v="0" title="Пауза (Пробел)">❚❚</button>
+      <button data-a="speed" data-v="1" title="×1 (Q)">▶</button>
+      <button data-a="speed" data-v="8" title="×8 (W)">×8</button>
+      <button data-a="speed" data-v="16" title="×16 (E)">×16</button>
+      <button data-a="speed" data-v="32" title="×32 (R)">×32</button>
+    </div>
+    <button class="ico" data-a="mute" id="bMute" title="Звук">🔊</button>
+    <button class="ico" data-a="menu" title="Меню">☰</button>
+  </header>
+  <div id="radio"><span class="rl">📻 WRNC 98.7</span><div class="rt"><span id="radioText"></span></div></div>
+  <main id="stage">
+    <canvas id="world"></canvas>
+    <aside id="panel" class="hidden"></aside>
+    <aside id="alerts"></aside>
+    <div id="toasts"></div>
+    <div id="quest" class="hidden"></div>
+    <div id="ovl"></div>
+    <div id="pops" class="hidden"></div>
+    <div id="hint"></div>
+  </main>
+  <nav id="nav"></nav>
+</div>
+<div id="tip" class="hidden"></div>
+<div id="modal" class="hidden"><div id="modalBox"></div></div>
+<script src="js/util.js"></script>
+<script src="js/data.js"></script>
+<script src="js/data2.js"></script>
+<script src="js/map.js"></script>
+<script src="js/car.js"></script>
+<script src="js/sim.js"></script>
+<script src="js/pawns.js"></script>
+<script src="js/orders.js"></script>
+<script src="js/market.js"></script>
+<script src="js/events.js"></script>
+<script src="js/race.js"></script>
+<script src="js/waste.js"></script>
+<script src="js/body.js"></script>
+<script src="js/city.js"></script>
+<script src="js/render.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/modals.js"></script>
+<script src="js/ui2.js"></script>
+<script src="js/ui3.js"></script>
+<script src="js/tutorial.js"></script>
+<script src="js/cityui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
