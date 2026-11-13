@@ -160,3 +160,8 @@ h3{color:#f0c454}
 #tutBubble{pointer-events:none;max-width:calc(100vw - 20px)}
 #tutBubble button,#tutBubble a{pointer-events:auto}
 @media(prefers-reduced-motion:reduce){.tut-hl{animation:none!important}}
+
+/* First-time guidance is visual only: every scenario remains selectable. */
+.scn-softgate{filter:grayscale(1);opacity:.5}
+.scn-softgate:hover,.scn-softgate.on{opacity:.8}
+.scn-recommended{border:2px solid var(--acc);box-shadow:0 0 14px rgba(227,178,60,.25)}

@@ -46,16 +46,41 @@
   A.mSave = d => { if (MOD.saveTo(d.s)) { MOD.hide(); G.toast('Сохранено в слот ' + d.s + '.', 'good'); } };
   A.mBack = () => MOD.menu();
   const btnB = (t, a, cls, data) => `<button class="btn ${cls || ''}" data-a="${a}" ${Object.entries(data || {}).map(([k, v]) => `data-${k}="${h(v)}"`).join(' ')}>${t}</button>`;
+  const trainingScenario = () => Object.keys(D.scenarios).find(id => D.scenarios[id].tutor);
+  const isTraining = id => !!(D.scenarios[id] && D.scenarios[id].tutor);
+  MOD.hasSaves = () => {
+    try { return ['auto', '1', '2', '3'].some(slot => !!(localStorage.getItem(KEY + 'save_' + slot) || '').trim()); }
+    catch (e) { return false; }
+  };
+  const recommendTraining = () => !MOD.hasSaves() && !!trainingScenario();
+  MOD.confirmNoTraining = (s, site, start) => {
+    MOD.pendingScenario = { s, site, start };
+    MOD.show(`<h2>Уверен? Может, сначала обучение?</h2>
+      <p>У тебя ещё нет сохранений. Обучение покажет, как принимать клиентов, ремонтировать машины и управлять автосервисом.</p>
+      <p class="mut">Можно сразу играть в выбранный сценарий — решать тебе.</p>
+      <div class="menu">${btnB('Выбрать обучение', 'mChooseTraining', 'pri')}${btnB(start ? 'Играть без обучения' : 'Всё равно выбрать', 'mWithoutTraining')}${btnB('Назад к сценариям', 'mScenarioBack')}</div>`, '', 'sub');
+  };
+  A.mChooseTraining = () => { const pending = MOD.pendingScenario; MOD.pendingScenario = null; MOD.approvedScenario = null; A.mNew({ s: trainingScenario(), site: pending && pending.site }); };
+  A.mWithoutTraining = () => { const pending = MOD.pendingScenario; if (!pending) return; MOD.pendingScenario = null; MOD.approvedScenario = pending.s; if (pending.start) A.mStart(pending); else A.mNew(pending); };
+  A.mScenarioBack = () => { MOD.pendingScenario = null; A.mNew(); };
   A.mNew = d => {
-    const sel = (d && d.s) || MOD.selScn || 'legacy', site = (d && d.site) || MOD.selSite || 'gas'; MOD.selScn = sel; MOD.selSite = site;
+    const first = recommendTraining();
+    const sel = (d && d.s) || MOD.selScn || (first ? trainingScenario() : 'legacy'), site = (d && d.site) || MOD.selSite || 'gas';
+    if (first && !isTraining(sel) && MOD.approvedScenario !== sel) { MOD.confirmNoTraining(sel, site, false); return; }
+    if (isTraining(sel)) MOD.approvedScenario = null;
+    MOD.selScn = sel; MOD.selSite = site;
     let s = '<h2>Новая игра</h2><div class="grid2"><div><h3>Сценарий</h3><div class="col">';
-    for (const id in D.scenarios) { const sc = D.scenarios[id]; s += `<div class="card scn ${id === sel ? 'on' : ''}" data-a="mNew" data-s="${id}"><b>${h(sc.n)}</b> <span class="pill">${sc.year}</span> <span class="pill g">${$m(sc.money)}</span>${sc.loan ? `<span class="pill r">ипотека ${$m(sc.loan)}</span>` : ''}<div class="sm mut">${h(sc.d)}</div></div>`; }
+    for (const id in D.scenarios) { const sc = D.scenarios[id]; s += `<div class="card scn ${first && !isTraining(id) ? 'scn-softgate' : ''} ${first && isTraining(id) ? 'scn-recommended' : ''} ${id === sel ? 'on' : ''}" data-a="mNew" data-s="${id}"><b>${h(sc.n)}</b>${first && isTraining(id) ? ' <span class="pill y">Рекомендуем</span>' : ''} <span class="pill">${sc.year}</span> <span class="pill g">${$m(sc.money)}</span>${sc.loan ? `<span class="pill r">ипотека ${$m(sc.loan)}</span>` : ''}<div class="sm mut">${h(sc.d)}</div></div>`; }
     s += '</div></div><div><h3>Участок</h3><div class="col">';
     for (const id in D.sites) { const st = D.sites[id]; s += `<div class="card scn ${id === site ? 'on' : ''}" data-a="mNew" data-s="${sel}" data-site="${id}"><b>${st.i} ${h(st.n)}</b> <span class="pill">клиенты ×${st.clients}</span><span class="pill ${st.loan > 1 ? 'r' : 'g'}">кредит ×${st.loan}</span><div class="sm mut">${h(st.d)}</div></div>`; }
     s += `</div></div></div><div class="row" style="margin-top:12px">${btnB('← Назад', 'mBack')}<span style="flex:1"></span>${btnB('Начать →', 'mStart', 'pri', { s: sel, site })}</div>`;
     MOD.show(s, 'mwide', 'sub');
   };
-  A.mStart = d => { G.newGame(d.s, null, d.site); WW.started = true; UI.buildOff && UI.buildOff(); MOD.hide(); UI.close(); UI.pops(null); R.fit(); UI.setSpeed(1); UI.hud(true); WW.A.play('bell'); };
+  A.mStart = d => {
+    if (recommendTraining() && !isTraining(d.s) && MOD.approvedScenario !== d.s) { MOD.confirmNoTraining(d.s, d.site, true); return; }
+    MOD.pendingScenario = null; MOD.approvedScenario = null;
+    G.newGame(d.s, null, d.site); WW.started = true; UI.buildOff && UI.buildOff(); MOD.hide(); UI.close(); UI.pops(null); R.fit(); UI.setSpeed(1); UI.hud(true); WW.A.play('bell');
+  };
   A.mHelp = () => MOD.show(`<h2>Как играть</h2>
     <p>Ты — хозяин гаража, а не механик с ключом. Время идёт само: <kbd>Пробел</kbd> — пауза, <kbd>Q</kbd> <kbd>W</kbd> <kbd>E</kbd> <kbd>R</kbd> — скорость ×1/×8/×16/×32. Карта: колёсико — зум, перетаскивание — сдвиг, клик по машине или человеку — карточка. <kbd>1</kbd>–<kbd>9</kbd> — панели, <kbd>Esc</kbd> — закрыть.</p>
     <h3>Три реки денег</h3>
